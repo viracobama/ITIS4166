@@ -1,0 +1,23 @@
+<%-include('../partials/header.ejs')%>
+<main>
+    <h2>Upcoming Events</h2>
+    <div class="content">
+        <% if (Object.keys(categories).length) { %>
+            <% for (let category in categories) { %>
+                <h3><%= category %></h3>
+                <ul>
+                    <% categories[category].forEach(event => { %>
+                        <li>
+                            <a href="/events/<%= event.id %>" class="event-title">
+                                <%= event.title %>
+                            </a> <br>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        <% } else { %>
+            <p>There are no events to display.</p>
+        <% } %>
+    </div>
+</main>
+<%- include('../partials/footer.ejs') %>

@@ -1,0 +1,37 @@
+<%-include('../partials/header.ejs')%>
+    <main>
+            <h1 style="display: flex; align-items: center; gap: 10px;">
+            <%= event.title %>
+
+            <form action="/events/<%= event.id %>/edit" method="GET" >
+                <button type="submit" 
+                        style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+                <i class="fa-solid fa-pen-to-square" ></i>
+                </button>
+            </form>
+
+            <form action="/events/<%= event.id %>?_method=DELETE" method="POST" >
+                <button type="submit" 
+                        style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+                <i class="fa-solid fa-trash"></i>
+                </button>
+            </form>
+            </h1>
+            <div class="event-details">
+                <div class="col-25">
+                    <% if (event.banner) { %>
+                        <img src="<%= event.banner %>" style="width:100%" alt="Event Banner" id="event-banner" name="image">
+                    <% } else { %>
+                        <p>No image available</p>
+                    <% } %>
+
+                </div>
+                <div class="col-75">
+                    <p><strong>Host:</strong> <%= event.host%></p>
+                    <p><strong>Date and Time:</strong> <%= formattedDateRange %></p>
+                    <p><strong>Location:</strong> <%= event.location%></p>
+                    <p><strong>Details:</strong> <%= event.details%></p>
+                </div>
+            </div>
+    </main>
+<%-include('../partials/footer.ejs')%>
