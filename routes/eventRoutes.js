@@ -5,29 +5,31 @@ const { fileUpload } = require('../middleware/fileUpload'); //
 const multer = require('multer');
 const upload = multer({ dest: 'public/images' });
 
-//GET /stories: send all stories to the user
+
+//GET /events: send all events to the user
 
 router.get('/', controller.index);
 
-//GET /stories/new: send html form for creating a new story
+//GET /events/new: send HTML form for creating a new event
 
 router.get('/new', controller.new);
 
-//POST /stories: create a new story
+//POST /events: create a new event
 
-router.post('/', upload.single('image'), controller.create);
+router.post('/', upload.single('banner'), controller.create);
 
-//GET /stories/:id: send details of story identified by id
+//GET /events/:id: send details of event identified by id
 router.get('/:id', controller.show);
 
-//GET /stories/:id/edit: send html form for editing an existing story
+//GET /events/:id/edit: send HTML form for editing an existing event
 router.get('/:id/edit', controller.edit);
 
-//PUT /stories/:id: update the story identified by id
-router.put('/:id', upload.single('image'), controller.update);
+//PUT /events/:id: update the event identified by id
+router.put('/:id', upload.single('banner'), controller.update);
 
-//DELETE /stories/:id, delete the story identified by id
+//DELETE /events/:id: delete the event identified by id
 router.delete('/:id', controller.delete);
+
 
 
 module.exports = router;
