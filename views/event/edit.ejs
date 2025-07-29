@@ -1,6 +1,6 @@
 <%-include('../partials/header.ejs')%>
     <main>
-        <form action='/events/<%= event.id%>?_method=PUT' method='POST' enctype="multipart/form-data"> 
+        <form action='/events/<%= event._id%>?_method=PUT' method='POST' enctype="multipart/form-data"> 
             <div class="form">
                 <div class="row">
                     <div class="col-25">
@@ -81,7 +81,10 @@
                         <label for="banner">Event Banner</label>
                     </div>
                     <div class="col-75">
-                        <input type="file" id="image" name="image" accept="image/*" required> 
+                        <input type="file" id="image" name="image" accept="image/*"> 
+                        <% if (event.banner) { %>
+                        <img src="<%= event.banner %>" alt="Current Event Banner" style="max-width: 300px; display:block; margin-bottom:10px;">
+                        <% } %>
                     </div>
                 </div>
                

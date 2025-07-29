@@ -1,6 +1,8 @@
 const { DateTime } = require("luxon");
 const { v4: uuidv4 } = require("uuid");
+const {ObjectId} = require('mongodb');
 
+/*
 const events = [
   {
     id: '1',
@@ -69,49 +71,52 @@ const events = [
     banner: '/images/breakaway.jpg'
   }
 ];
+*/
 
-exports.find = () => events;
+//need a reference events collection in mongodb
+let events; 
+exports.getCollection = db => {
+  events = db.collection('events');
+};
 
-exports.findByID = id => events.find(event => event.id === id);
+exports.find = () => events.find().toArray();
 
-exports.save = function(event) {
+exports.findByID = (id) => {
+  if (!ObjectId.isValid(id)) return Promise.resolve(null);
+  return events.findOne({ _id: new ObjectId(id) });
+};
+
+exports.save = async function(event) {
   event.id = uuidv4();
-
-  // Format start and end as strings for display
-  event.start = DateTime.fromISO(event.start).toLocaleString(DateTime.DATETIME_FULL);
-  event.end = DateTime.fromISO(event.end).toLocaleString(DateTime.DATETIME_FULL);
-
-  // Use the banner from event or default to empty string
+  event.start = DateTime.fromISO(event.start).toISO();
+  event.end = DateTime.fromISO(event.end).toISO();
   event.banner = event.banner || '';
 
-  events.push(event);
+  return await events.insertOne(event);
 };
 
-exports.updateById = function(id, newEvent) {
-  let event = events.find(event => event.id === id);
-  if (event) {
-    event.category = newEvent.category;
-    event.title = newEvent.title;
-    event.host = newEvent.host;
-    event.start = DateTime.fromISO(newEvent.start).toLocaleString(DateTime.DATETIME_FULL);
-    event.end = DateTime.fromISO(newEvent.end).toLocaleString(DateTime.DATETIME_FULL);
-    event.location = newEvent.location;
-    event.details = newEvent.details;
-    event.banner = newEvent.banner && newEvent.banner !== '' ? newEvent.banner : event.banner;
-    return true;
-  } else {
-    return false;
-  }
+exports.updateById = async (id, newEvent) => {
+  if (!ObjectId.isValid(id)) return false;
+  const update = {
+    $set: {
+      category: newEvent.category,
+      title: newEvent.title,
+      host: newEvent.host,
+      start: DateTime.fromISO(newEvent.start).toISO(),
+      end: DateTime.fromISO(newEvent.end).toISO(),
+      location: newEvent.location,
+      details: newEvent.details,
+      banner: newEvent.banner || '',
+    }
+  };
+  const result = await events.updateOne({ _id: new ObjectId(id) }, update);
+  return result.modifiedCount > 0;
 };
 
-exports.deleteById = function(id) {
-  let index = events.findIndex(event => event.id === id);
-  if (index !== -1) {
-    events.splice(index, 1);
-    return true;
-  } else {
-    return false;
-  }
+exports.deleteById = async (id) => {
+  if (!ObjectId.isValid(id)) return false;
+  const result = await events.deleteOne({ _id: new ObjectId(id) });
+  return result.deletedCount > 0;
 };
 
 exports.formatDateRange = function(event) {

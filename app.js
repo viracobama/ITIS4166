@@ -1,67 +1,75 @@
-//require modules
+// require modules
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
-const ejs = require('ejs');
 const eventRoutes = require('./routes/eventRoutes');
+const { MongoClient } = require('mongodb');
+const { getCollection } = require('./models/event.js');
+const mongoose = require('mongoose');
 
-const path = require('multer');
-const multer  = require('multer');
-
-
-//create app
+// create app
 const app = express();
 
-//configure app
-let port = 3000;
-let host = 'localhost';
+// configure app
+const port = 3000;
+const host = 'localhost';
+const url = 'mongodb://localhost:27017';
+
+
+
 app.set('view engine', 'ejs');
 
-//mount middlware
-app.use(express.static('public')); //middleware to give access to css style and images
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('tiny'));
-app.use(methodOverride('_method'));
+async function startServer() {
+  try {
+    // connect to MongoDB
+    const client = await MongoClient.connect(url);
+    const db = client.db('demos');
 
-//set up routes
-app.get('/', (req, res)=> {
-    res.render('index');
-});
+    // initialize the events collection in your model
+    getCollection(db);
 
-app.get('/about', (req, res) => {
-  res.render('about');
-});
+    // mount middleware
+    app.use(express.static('public'));
+    app.use(express.urlencoded({ extended: true }));
+    app.use(morgan('tiny'));
+    app.use(methodOverride('_method'));
 
-app.get('/contact', (req, res) => {
-  res.render('contact');
-});
+    // define routes
+    app.get('/', (req, res) => res.render('index'));
 
-app.use('/events', eventRoutes);
+    app.get('/about', (req, res) => res.render('about'));
 
+    app.get('/contact', (req, res) => res.render('contact'));
 
-app.use((req, res, next) =>{
-    let err = new Error('The server cannot locate ' + req.url);
-    err.status = 404;
-    next(err);
-    
-});
+    app.use('/events', eventRoutes);
 
-app.use((err, req, res, next)=> { //error handling
-    console.log(err.stack);
-    if(!err.status) {
+    // 404 handler
+    app.use((req, res, next) => {
+      let err = new Error('The server cannot locate ' + req.url);
+      err.status = 404;
+      next(err);
+    });
+
+    // error handler
+    app.use((err, req, res, next) => {
+      console.error(err.stack);
+      if (!err.status) {
         err.status = 500;
-        err.message = ('Internal Server Error');
-    }
+        err.message = 'Internal Server Error';
+      }
+      res.status(err.status);
+      res.render('error', { error: err });
+    });
 
-    res.status(err.status);
-    res.render('error', {error: err});
-});
+    // start server only after everything is set up
+    app.listen(port, host, () => {
+      console.log(`Server running at http://${host}:${port}`);
+    });
 
-//start the server
-app.listen(port, host, () => {
-    console.log('The server is running at port', port);
-});
+  } catch (err) {
+    console.error('Failed to connect to MongoDB', err);
+  }
+}
 
-
-
+// start the app
+startServer();

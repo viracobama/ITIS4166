@@ -8,7 +8,7 @@
                 <ul>
                     <% categories[category].forEach(event => { %>
                         <li>
-                            <a href="/events/<%= event.id %>" class="event-title">
+                            <a href="/events/<%= event._id %>" class="event-title">
                                 <%= event.title %>
                             </a> <br>
                         </li>
