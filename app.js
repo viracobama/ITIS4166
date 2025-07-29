@@ -9,7 +9,7 @@ const app = express();
 
 const port = 3000;
 const host = 'localhost';
-const url = 'mongodb://localhost:27017/demos';
+const url = 'mongodb+srv://vbou:demo123@project3.hnrgn24.mongodb.net/?retryWrites=true&w=majority&appName=project3';
 
 // Set views directory explicitly (helps avoid issues)
 app.set('views', path.join(__dirname, 'views'));
