@@ -76,14 +76,11 @@
           <div id="bannerDropZone" style="border: 2px dashed #ccc; padding: 1rem; cursor: pointer;">
             <p>Drag & drop an image here, or click to select</p>
             <input type="file" id="banner" name="banner" accept="image/*" style="display: none;">
-            <% if (event.banner) { %>
-              <img id="bannerPreview" src="<%= event.banner %>" alt="Current Event Banner" style="max-width: 300px; display: block; margin-top: 10px;">
-            <% } else { %>
-              <img id="bannerPreview" src="" alt="Event Banner Preview" style="max-width: 300px; display: none; margin-top: 10px;">
-            <% } %>
+            <img id="bannerPreview" src="" alt="Event Banner Preview" style="max-width: 300px; display: none; margin-top: 10px;">
           </div>
         </div>
       </div>
+
 
 
       <div class="row">

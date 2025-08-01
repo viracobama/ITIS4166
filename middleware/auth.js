@@ -23,15 +23,20 @@ exports.isHost = async (req, res, next) => {
   try {
     const event = await Event.findById(id);
     if (!event) {
-      req.flash('error', 'Event not found');
-      return res.redirect('/events');
+      const err = new Error('Event not found');
+      err.status = 404;
+      return next(err);
     }
+
     if (String(event.host) !== String(req.session.user)) {
-      req.flash('error', 'You are not authorized to modify this event');
-      return res.redirect(`/events/${id}`);
+      const err = new Error('You are not authorized to modify this event');
+      err.status = 401;
+      return next(err); // Let error handler render the error page
     }
+
     next();
   } catch (err) {
     next(err);
   }
 };
+

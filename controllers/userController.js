@@ -40,7 +40,7 @@ exports.login = (req, res, next) => {
     .then(user => {
       if (!user) {
         console.log('No user found');
-        req.flash('error', 'Invalid email or password');
+        req.flash('error', 'Invalid email');
         return res.redirect('/users/login');
       }
 
@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
         .then(isMatch => {
           if (!isMatch) {
             console.log('Password mismatch');
-            req.flash('error', 'Invalid email or password');
+            req.flash('error', 'Invalid password');
             return res.redirect('/users/login');
           }
 
@@ -80,7 +80,7 @@ exports.login = (req, res, next) => {
 
 
 exports.profile = (req, res, next) => {
-  let id = req.session.user; // <-- just the string ID
+  let id = req.session.user; // Use session user ID
   if (!id) {
     req.flash('error', 'You must be logged in to view profile');
     return res.redirect('/users/login');
@@ -95,7 +95,7 @@ exports.profile = (req, res, next) => {
 };
 
 exports.logout = (req, res, next) => {
-  req.flash('success', 'You have been logged out');
+  res.cookie('flash', JSON.stringify({ success: ['You have been logged out'] }), { httpOnly: true });
   req.session.destroy(err => {
     if (err) return next(err);
     res.redirect('/');

@@ -70,13 +70,18 @@
             
                 
                 <div class="row">
-                    <div class="col-25">
-                        <label for="banner">Event Banner</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="file" id="banner" name="banner" accept="image/*" required> 
+                <div class="col-25">
+                    <label for="banner">Event Banner</label>
+                </div>
+                <div class="col-75">
+                    <div id="bannerDropZone">
+                    <p>Drag & drop an image here, or click to select</p>
+                    <input type="file" id="banner" name="banner" accept="image/*" style="display: none;">
+                    <img id="bannerPreview" src="" alt="Event Banner Preview">
                     </div>
                 </div>
+                </div>
+
                
                
                 

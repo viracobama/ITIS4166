@@ -1,50 +1,54 @@
 <%- include('../partials/header.ejs')%>
+
 <main>
+  <div class="content">
     <form action="/users" method="POST" class="user-form">
-        <div class="form">
-            <div class="row">
-                <div class="col-25">
-                    <label for="firstName">First Name</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="firstName" name="firstName" required>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="lastName">Last Name</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="lastName" name="lastName" required>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="email">Email Address</label>
-                </div>
-                <div class="col-75">
-                    <input type="email" id="email" name="email" required>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25">
-                    <label for="password">Password</label>
-                </div>
-                <div class="col-75">
-                    <input type="password" id="password" name="password" minlength="8" required>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-25"></div>
-                <div class="col-75">
-                    <input type="submit" value="Sign Up">
-                </div>
-            </div>
+      <div class="form">
+        <div class="row">
+          <div class="col-25">
+            <label for="firstName">First Name</label>
+          </div>
+          <div class="col-75">
+            <input type="text" id="firstName" name="firstName" required>
+          </div>
         </div>
+
+        <div class="row">
+          <div class="col-25">
+            <label for="lastName">Last Name</label>
+          </div>
+          <div class="col-75">
+            <input type="text" id="lastName" name="lastName" required>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-25">
+            <label for="email">Email Address</label>
+          </div>
+          <div class="col-75">
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-25">
+            <label for="password">Password</label>
+          </div>
+          <div class="col-75">
+            <input type="password" id="password" name="password" minlength="8" required>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-25"></div>
+          <div class="col-75">
+            <input type="submit" value="Sign Up">
+          </div>
+        </div>
+      </div>
     </form>
+  </div>
 </main>
+
 <%- include('../partials/footer.ejs')%>

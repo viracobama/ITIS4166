@@ -6,6 +6,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const path = require('path');
+const cookieParser = require('cookie-parser'); // requried to parse cookies for flash messages on logout
+
 
 
 const User = require('./models/user');
@@ -27,6 +29,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 app.use(methodOverride('_method'));
+app.use(cookieParser());
 
 store.on('error', function(error) {
   console.error('Session store error:', error);
@@ -43,13 +46,26 @@ app.use(session({
 app.use(flash());
 
 // User middleware to expose current user to all views
-// User middleware to expose current user to all views and req
 app.use(async (req, res, next) => {
+  // If flash cookie exists, move it into req.flash
+  if (req.cookies && req.cookies.flash) {
+    try {
+      const flash = JSON.parse(req.cookies.flash);
+      for (const [type, messages] of Object.entries(flash)) {
+        messages.forEach(msg => req.flash(type, msg));
+      }
+      res.clearCookie('flash');
+    } catch (err) {
+      console.error('Error parsing flash cookie:', err);
+      res.clearCookie('flash');
+    }
+  }
+
   if (req.session.user) {
     try {
       const user = await User.findById(req.session.user);
       res.locals.user = user;
-      req.user = user; // <-- This is needed for isHost
+      req.user = user;
     } catch (error) {
       console.error('Error fetching current user:', error);
       res.locals.user = null;
@@ -64,6 +80,7 @@ app.use(async (req, res, next) => {
   res.locals.errorMessages = req.flash('error');
   next();
 });
+
 
 
 // Routes

@@ -1,3 +1,6 @@
+// public/javascript/bannerPreview.js
+// This script handles the preview of a banner image before uploading it.
+
 document.addEventListener('DOMContentLoaded', () => {
   const imageInput = document.getElementById('banner');
   const bannerPreview = document.getElementById('bannerPreview');
