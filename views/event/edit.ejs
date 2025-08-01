@@ -1,104 +1,100 @@
-<%-include('../partials/header.ejs')%>
-    <main>
-        <form action='/events/<%= event._id%>?_method=PUT' method='POST' enctype="multipart/form-data"> 
-            <div class="form">
-                <div class="row">
-                    <div class="col-25">
-                        <label for="category">Category</label>
-                    </div>
-                    <div class="col-75">
-                        <select id="category" name="category" required>
-                            <option value="">--Select a category--</option>
-                            <option value="Clubbing" <%= event.category === 'Clubbing' ? 'selected' : '' %>>Clubbing</option>
-                            <option value="Concert" <%= event.category === 'Concert' ? 'selected' : '' %>>Concert</option>
-                            <option value="Festival" <%= event.category === 'Festival' ? 'selected' : '' %>>Festival</option>
-                            <option value="Party" <%= event.category === 'Party' ? 'selected' : '' %>>Party</option>
-                            <option value="Other" <%= event.category === 'Other' ? 'selected' : '' %>>Other</option>
-                        </select>
-                    </div>
-                </div>
-                
+<%- include('../partials/header.ejs') %>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="title">Title</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="title" name="title" placeholder="title" value="<%= event.title%>" required>
-                    </div>
-                </div>
+<main>
+  <h1>Edit Event</h1>
+  <form action="/events/<%= event._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+    <div class="form">
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="title">Host Name</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="host" name="host" placeholder="host name" value="<%= event.host%>" required>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-25">
-                        <label for="details">Details</label>
-                    </div>
-                    <div class="col-75">
-                        <textarea id="details" name="details" rows="4" placeholder="description" required><%= event.details%></textarea>
-                    </div>
-                </div>
-                
-                
-                <div class="row">
-                    <div class="col-25">
-                        <label for="location">Where</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="location" name="location" placeholder="location" value="<%= event.location%>" required>
-                    </div>
-                </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="category">Category</label>
+        </div>
+        <div class="col-75">
+          <select id="category" name="category" required>
+            <option value="">--Select a category--</option>
+            <option value="Clubbing" <%= event.category === 'Clubbing' ? 'selected' : '' %>>Clubbing</option>
+            <option value="Concert" <%= event.category === 'Concert' ? 'selected' : '' %>>Concert</option>
+            <option value="Festival" <%= event.category === 'Festival' ? 'selected' : '' %>>Festival</option>
+            <option value="Party" <%= event.category === 'Party' ? 'selected' : '' %>>Party</option>
+            <option value="Other" <%= event.category === 'Other' ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+      </div>
 
-                
+      <div class="row">
+        <div class="col-25">
+          <label for="title">Title</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="title" name="title" placeholder="Title" value="<%= event.title %>" required>
+        </div>
+      </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="start">Start</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="datetime-local" id="start" name="start" value="<%= event.start%>" required>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="end">End</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="datetime-local" id="end" name="end" value="<%= event.end%>" required>
-                    </div>
-                </div>
-            
-                <div class="row">
-                    <div class="col-25">
-                        <label for="banner">Event Banner</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="file" id="image" name="image" accept="image/*"> 
-                        <% if (event.banner) { %>
-                        <img src="<%= event.banner %>" alt="Current Event Banner" style="max-width: 300px; display:block; margin-bottom:10px;">
-                        <% } %>
-                    </div>
-                </div>
-               
-                
-                
 
-                <div class="row">
-                    <div class="col-25">
-                    </div>
-                    <div class="col-75">
-                        <button type="submit">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </main>
-<%-include('../partials/footer.ejs')%>
+      <div class="row">
+        <div class="col-25">
+          <label for="details">Details</label>
+        </div>
+        <div class="col-75">
+          <textarea id="details" name="details" rows="4" placeholder="Description" required><%= event.details %></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-25">
+          <label for="location">Where</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="location" name="location" placeholder="Location" value="<%= event.location %>" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-25">
+          <label for="start">Start</label>
+        </div>
+        <div class="col-75">
+          <input type="datetime-local" id="start" name="start" value="<%= startISO %>" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-25">
+          <label for="end">End</label>
+        </div>
+        <div class="col-75">
+          <input type="datetime-local" id="end" name="end" value="<%= endISO %>" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-25">
+          <label for="banner">Event Banner</label>
+        </div>
+        <div class="col-75">
+          <div id="bannerDropZone" style="border: 2px dashed #ccc; padding: 1rem; cursor: pointer;">
+            <p>Drag & drop an image here, or click to select</p>
+            <input type="file" id="banner" name="banner" accept="image/*" style="display: none;">
+            <% if (event.banner) { %>
+              <img id="bannerPreview" src="<%= event.banner %>" alt="Current Event Banner" style="max-width: 300px; display: block; margin-top: 10px;">
+            <% } else { %>
+              <img id="bannerPreview" src="" alt="Event Banner Preview" style="max-width: 300px; display: none; margin-top: 10px;">
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-25"></div>
+        <div class="col-75">
+          <button type="submit">Submit</button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/footer.ejs') %>

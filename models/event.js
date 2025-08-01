@@ -11,7 +11,7 @@ const eventSchema = new Schema({
     enum: ['Clubbing', 'Concert', 'Festival', 'Party', 'Other'], // <-- Enum here
   },
   title: { type: String, required: [true, 'title is required'] },
-  host: { type: String, required: [true, 'host is required'] },
+  host: { type: Schema.Types.ObjectId, ref: 'User', required: [true, 'host is required'] },
   details: { type: String, required: [true, 'details is required'] },
   location: { type: String, required: [true, 'location is required'] },
   start: { type: Date, required: [true, 'Start date is required'] },

@@ -1,26 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage - Clubpedia</title>
-    <link rel="stylesheet"  type="text/css" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clubpedia</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="/javascript/flash.js"></script>
+    <script src="/javascript/bannerPreview.js"></script>
 </head>
 <body>
     <header>
-        <a href="/"><img src="/images/logo.png"  alt="Clubpedia Logo" id="logo" width="150"></a>
+        <a href="/"><img src="/images/logo.png" alt="Clubpedia Logo" id="logo" width="150" /></a>
         <nav id="login-nav">
             <ul>
-                <li><a href="../events/new/">New Event</a></li>
-                <li><a href="">Sign Up</a></li>
-                <li><a href="">Login</a></li>
+                <li><a href="/events/new">New Event</a></li>
+
+                <% if (!user) { %>
+                    <li><a href="/users/new">Sign Up</a></li>
+                    <li><a href="/users/login">Login</a></li>
+                <% } else { %>
+                    <li><a href="/users/profile">Profile</a></li>
+                    <li><a href="/users/logout">Logout</a></li>
+                <% } %>
             </ul>
         </nav>
     </header>
+
     <nav id="main-nav">
         <ul>
-            <li><a href="/events/">Events</a></li>
+            <li><a href="/events">Events</a></li>
         </ul>
     </nav>
-    
+
+    <div class="content">
+
+    <% if (errorMessages && errorMessages.length > 0) { %>
+        <% errorMessages.forEach(message => { %>
+            <div class="error"><%= message %></div>
+        <% }) %>
+    <% } %>
+
+    <% if (successMessages && successMessages.length > 0) { %>
+        <% successMessages.forEach(message => { %>
+            <div class="success"><%= message %></div>
+        <% }) %>
+    <% } %>

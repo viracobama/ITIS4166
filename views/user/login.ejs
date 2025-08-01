@@ -1,0 +1,32 @@
+<%- include('../partials/header.ejs')%>
+<main>
+    <form action="/users/login" method="POST" class="user-form">
+        <div class="form">
+            <div class="row">
+                <div class="col-25">
+                    <label for="email">Email Address</label>
+                </div>
+                <div class="col-75">
+                    <input type="email" id="email" name="email" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="password">Password</label>
+                </div>
+                <div class="col-75">
+                    <input type="password" id="password" name="password" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25"></div>
+                <div class="col-75">
+                    <input type="submit" value="Login">
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+<%- include('../partials/footer.ejs')%>

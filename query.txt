@@ -1,10 +1,7 @@
-mongosh
-
 db.events.insertMany([
   {
     category: 'Clubbing',
     title: 'Emo Nite',
-    host: 'DJ Shadow',
     details: 'A night full of emo classics and dark vibes.',
     location: 'Downtown Club',
     start: '2025-07-01T20:00:00',
@@ -14,7 +11,6 @@ db.events.insertMany([
   {
     category: 'Clubbing',
     title: 'Kpop Club Night',
-    host: 'K-Crew',
     details: 'Dance all night to the hottest Kpop hits.',
     location: 'Seoul Lounge',
     start: '2025-08-12T19:00:00',
@@ -24,7 +20,6 @@ db.events.insertMany([
   {
     category: 'Clubbing',
     title: 'Shrek Night',
-    host: 'Fiona DJs',
     details: 'Get swampy with some green beats and fun surprises.',
     location: 'Fairy Tale Club',
     start: '2025-09-05T21:00:00',
@@ -34,7 +29,6 @@ db.events.insertMany([
   {
     category: 'Concert',
     title: 'Katseye',
-    host: 'Greffen Records',
     details: 'An electrifying indie concert by Katseye.',
     location: 'City Arena',
     start: '2025-10-10T18:30:00',
@@ -44,7 +38,6 @@ db.events.insertMany([
   {
     category: 'Concert',
     title: 'Pierce The Veil',
-    host: 'Rock Nation',
     details: 'High energy rock concert with special guests.',
     location: 'The Grand Theater',
     start: '2025-11-15T20:00:00',
@@ -54,7 +47,6 @@ db.events.insertMany([
   {
     category: 'Concert',
     title: 'Breakway',
-    host: 'Live Events',
     details: 'Alternative rock concert with Breakway band.',
     location: 'Open Air Park',
     start: '2025-12-05T19:00:00',

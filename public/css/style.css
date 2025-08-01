@@ -269,3 +269,101 @@ h1 form button .fa-pen-to-square {
 h1 form button .fa-trash {
   color: red;
 }
+
+.events-table {
+  max-width: 300px; /* or any width you prefer */
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); /* subtle drop shadow */
+  border-radius: 10px; /* optional rounded corners */
+  overflow: hidden; /* ensures shadow and rounding work well */
+}
+
+.events-table th,
+.events-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    border-left: none;
+    border-right: none;
+}
+
+.events-table th:nth-child(2),
+.events-table td:nth-child(2) {
+  width: 50px; /* or any smaller width you want */
+  white-space: nowrap; /* keep buttons from wrapping */
+}
+
+
+/* profile table formatting */
+.events-table th {
+  background-color: #f2f2f2;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.action-buttons form {
+  display: inline-block; /* or block, flex, as needed */
+  margin: 0; /* remove default margin */
+}
+
+.action-buttons button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.events-table td {
+  vertical-align: middle; /* vertically center content inside table cells */
+}
+
+td a {
+    color: black;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+    color: #000c72;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center; /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  height: 100%; /* take full height of the cell */
+}
+
+/* Flash message base styling */
+.error,
+.success {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Specific types */
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
