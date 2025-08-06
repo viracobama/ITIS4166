@@ -1,5 +1,6 @@
 const model = require('../models/user');
 const Event = require('../models/event');
+const Rsvp = require('../models/rsvp');
 
 exports.new = (req, res) => {
   res.render('./user/new');
@@ -7,6 +8,8 @@ exports.new = (req, res) => {
 
 exports.create = (req, res, next) => {
   let user = new model(req.body);
+  if(user.email)
+    user.email = user.email.toLowerCase();
   user.save()
     .then(user => {
       req.flash('success', 'User account created successfully. Please log in.');
@@ -33,7 +36,10 @@ exports.getUserLogin = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+
+  if (email) email = email.toLowerCase(); // normalize email
+
   console.log('Login attempt for:', email);
 
   model.findOne({ email })
@@ -44,7 +50,6 @@ exports.login = (req, res, next) => {
         return res.redirect('/users/login');
       }
 
-      // Use the Promise returned by comparePassword
       user.comparePassword(password)
         .then(isMatch => {
           if (!isMatch) {
@@ -62,7 +67,7 @@ exports.login = (req, res, next) => {
               return next(err);
             }
             console.log('Redirecting to homepage');
-            res.redirect('/');  // <-- Redirect to homepage here
+            res.redirect('/');
           });
         })
         .catch(err => {
@@ -79,20 +84,26 @@ exports.login = (req, res, next) => {
 
 
 
+
 exports.profile = (req, res, next) => {
-  let id = req.session.user; // Use session user ID
+  const id = req.session.user;
+
   if (!id) {
     req.flash('error', 'You must be logged in to view profile');
     return res.redirect('/users/login');
   }
 
-  Promise.all([model.findById(id), Event.find({ host: id })])
-    .then(results => {
-      const [user, events] = results;
-      res.render('./user/profile', { user, events });
+  Promise.all([
+    model.findById(id).lean(),              // user info
+    Event.find({ host: id }).lean(),        // events hosted by the user
+    Rsvp.find({ user: id }).populate('event').lean() // RSVPs made by the user
+  ])
+    .then(([user, events, rsvps]) => {
+      res.render('./user/profile', { user, events, rsvps });
     })
     .catch(err => next(err));
 };
+
 
 exports.logout = (req, res, next) => {
   res.cookie('flash', JSON.stringify({ success: ['You have been logged out'] }), { httpOnly: true });

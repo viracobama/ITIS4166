@@ -41,6 +41,35 @@
   <% } else { %>
     <p>You have not created any events.</p>
   <% } %>
+
+
+    <% if (rsvps.length) { %>
+      <h3>My RSVPs</h3>
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Going?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rsvps.forEach(rsvp => { %>
+            <tr>
+              <td>
+                <a href="/events/<%= rsvp.event._id %>"><%= rsvp.event.title %></a>
+              </td>
+              <td><%= rsvp.status %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>You haven’t RSVPed to any events yet.</p>
+    <% } %>
+
+
 </main>
+
+
 
 <%- include('../partials/footer.ejs') %>

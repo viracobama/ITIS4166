@@ -603,3 +603,36 @@ thead tr th {
   margin-top: 10px;
 }
 
+.rsvp-div form {
+  width: 100%;
+}
+
+.rsvp-div form .yes  {
+  background-color: green;
+  margin-bottom: 10px;
+  display: inline-flex;
+  width:auto;
+}
+
+
+.rsvp-div form .no  {
+  background-color: red;
+  margin-bottom: 10px;
+  width:auto;
+}
+
+.rsvp-div form .maybe  {
+  background-color: blue;
+  margin-bottom: 10px;
+  width:auto;
+}
+
+.rsvp-div form .yes:hover, .rsvp-div form .no:hover,.rsvp-div form .maybe:hover {
+  background-color: purple;
+}
+
+
+h1 {
+  display: flex; align-items: center; gap: 10px;
+}
+

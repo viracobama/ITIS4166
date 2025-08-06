@@ -1,4 +1,5 @@
 const model = require('../models/event');
+const Rsvp = require('../models/rsvp');
 const { DateTime } = require('luxon');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -67,7 +68,7 @@ exports.create = (req, res, next) => {
 };
 
 // GET /events/:id - Show details of an event
-exports.show = (req, res, next) => {
+exports.show = async (req, res, next) => {
   const id = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -76,23 +77,29 @@ exports.show = (req, res, next) => {
     return next(err);
   }
 
-  model.findById(id).populate('host').lean()
-    .then(event => {
-      if (!event) {
-        const err = new Error('Cannot find event with ID ' + id);
-        err.status = 404;
-        return next(err);
-      }
+  try {
+    const event = await model.findById(id).populate('host').lean();
 
-      const start = DateTime.fromISO(event.start.toISOString()).toFormat("ccc, LLL d, yyyy, h:mm a");
-      const end = DateTime.fromISO(event.end.toISOString()).toFormat("ccc, LLL d, yyyy, h:mm a");
+    if (!event) {
+      const err = new Error('Cannot find event with ID ' + id);
+      err.status = 404;
+      return next(err);
+    }
 
-      const formattedDateRange = `${start} - ${end}`;
+    const start = DateTime.fromISO(event.start.toISOString()).toFormat("ccc, LLL d, yyyy, h:mm a");
+    const end = DateTime.fromISO(event.end.toISOString()).toFormat("ccc, LLL d, yyyy, h:mm a");
+    const formattedDateRange = `${start} - ${end}`;
 
-      res.render('./event/show', { event, formattedDateRange });
-    })
-    .catch(err => next(err));
+    const yesCount = await Rsvp.countDocuments({ event: event._id, status: 'YES' });
+
+    res.render('./event/show', { event, formattedDateRange, yesCount });
+
+  } catch (err) {
+    next(err);
+  }
 };
+
+
 
 // GET /events/:id/edit - Edit event form
 exports.edit = (req, res, next) => {
@@ -220,9 +227,75 @@ exports.delete = async (req, res, next) => {
       });
     }
 
+    // 🔥 Delete associated RSVPs
+    await Rsvp.deleteMany({ event: id });
+
+    // Then delete the event itself
     await model.findByIdAndDelete(id);
-    req.flash('success', 'Event deleted successfully');
+
+    req.flash('success', 'Event and RSVPs deleted successfully');
     res.redirect('/events');
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+exports.handleRsvp = async (req, res, next) => {
+  console.log('req.body:', req.body); 
+  console.log('RSVP route hit');
+  console.log('user:', req.session.user);
+  console.log('event ID:', req.params.id);
+
+  try {
+    const eventId = req.params.id;
+    const userId = req.session.user;
+
+    // Check if eventId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      const err = new Error(`Cannot find an event with id ${eventId}`);
+      err.status = 404;
+      return res.status(404).render('error', { error: err });
+    }
+
+    if (!req.body || !req.body.status) {
+      req.flash('error', 'RSVP cannot be empty');
+      return res.redirect(`/events/${eventId}`);
+    }
+
+    const status = req.body.status.toUpperCase();
+    const validStatuses = ['YES', 'NO', 'MAYBE'];
+
+    if (!validStatuses.includes(status)) {
+      req.flash('error', 'RSVP can only be YES, NO, or MAYBE');
+      return res.redirect(`/events/${eventId}`);
+    }
+
+    const event = await model.findById(eventId);
+    if (!event) {
+      const err = new Error('Event not found');
+      err.status = 404;
+      return res.status(404).render('error', { error: err });
+    }
+
+    if (String(event.host) === String(userId)) {
+      const err = new Error('You cannot RSVP to your own event');
+      err.status = 401;
+      return res.status(401).render('error', { error: err });
+    }
+
+    const existingRsvp = await Rsvp.findOne({ user: userId, event: eventId });
+
+    if (existingRsvp) {
+      existingRsvp.status = status;
+      await existingRsvp.save();
+      req.flash('success', 'Successfully updated your RSVP for this event!');
+    } else {
+      await Rsvp.create({ user: userId, event: eventId, status });
+      req.flash('success', 'Successfully created an RSVP for this event!');
+    }
+
+    res.redirect(`/users/profile`);
   } catch (err) {
     next(err);
   }

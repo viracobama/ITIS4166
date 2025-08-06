@@ -1,25 +1,40 @@
 const express = require('express');
-const controller = require('../controllers/userController');
-const {isGuest, isLoggedIn} = require('../middleware/auth');
-
 const router = express.Router();
 
-//GET /users/new: send html form for creating a new user account
+const controller = require('../controllers/userController');
+const { isGuest, isLoggedIn } = require('../middleware/auth');
+const { logInLimiter } = require('../middleware/rateLimiters');
+const { validateSignUp, validateLogIn, validateResult } = require('../middleware/validator');
+
+// GET /users/new: show sign-up form
 router.get('/new', isGuest, controller.new);
 
-//POST /users: create a new user account
-router.post('/', controller.create);
+// POST /users: create new user
+router.post(
+  '/',
+  isGuest,
+  validateSignUp,
+  validateResult('/users/new'),
+  controller.create
+);
 
-//GET /users/login: send html for logging in
+// GET /users/login: show login form
 router.get('/login', isGuest, controller.getUserLogin);
 
-//POST /users/login: authenticate user's login
-router.post('/login', isGuest, controller.login);
+// POST /users/login: handle login
+router.post(
+  '/login',
+  logInLimiter,
+  isGuest,
+  validateLogIn,
+  validateResult('/users/login'),
+  controller.login
+);
 
-//GET /users/profile: send user's profile page
+// GET /users/profile: show profile
 router.get('/profile', isLoggedIn, controller.profile);
 
-//POST /users/logout: logout a user
+// GET /users/logout: logout user
 router.get('/logout', isLoggedIn, controller.logout);
 
 module.exports = router;

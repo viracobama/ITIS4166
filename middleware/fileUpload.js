@@ -29,12 +29,11 @@ const upload = multer({
 
 exports.fileUpload = (req, res, next) => {
     upload(req, res, err => {
-        if (err) {
-            err.status = 400;
-            next(err);
-          } else {
-            next();
-          }
-            
+      if (err) {
+          err.status = 400;
+          next(err);
+      } else {
+          next();
+      }      
     });
 }

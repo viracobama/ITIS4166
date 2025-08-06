@@ -6,9 +6,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const path = require('path');
-const cookieParser = require('cookie-parser'); // requried to parse cookies for flash messages on logout
-
-
+const cookieParser = require('cookie-parser'); // required to parse cookies for flash messages on logout
 
 const User = require('./models/user');
 const eventRoutes = require('./routes/eventRoutes');
@@ -26,7 +24,11 @@ app.set('view engine', 'ejs');
 
 // Middleware setup
 app.use(express.static('public'));
+
+// Important: add these early before routes to parse request bodies
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(morgan('tiny'));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
@@ -81,7 +83,14 @@ app.use(async (req, res, next) => {
   next();
 });
 
-
+app.use((req, res, next) => {
+  console.log('--- Incoming request ---');
+  console.log('Method:', req.method);
+  console.log('URL:', req.originalUrl);
+  console.log('Headers:', req.headers['content-type']);
+  console.log('Body:', req.body);
+  next();
+});
 
 // Routes
 app.get('/', (req, res) => res.render('index'));
